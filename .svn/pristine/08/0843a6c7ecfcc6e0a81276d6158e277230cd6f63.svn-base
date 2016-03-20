@@ -1,0 +1,49 @@
+package com.baidu.yun.model;
+
+import java.util.Map;
+
+/**
+ * BaiduIosMsgFormat.java
+ * 
+ */
+
+public class BaiduRspIosMsg {
+
+	private String alert;
+	private String sound;
+	private Integer badge;
+	private Map<String, Object> customContent;
+
+	public String getAlert() {
+		return alert;
+	}
+
+	public void setAlert(String alert) {
+		this.alert = alert;
+	}
+
+	public String getSound() {
+		return sound;
+	}
+
+	public void setSound(String sound) {
+		this.sound = sound;
+	}
+
+	public Integer getBadge() {
+		return badge;
+	}
+
+	public void setBadge(Integer badge) {
+		this.badge = badge;
+	}
+
+	public Map<String, Object> getCustomContent() {
+		return customContent;
+	}
+
+	public void setCustomContent(Map<String, Object> customContent) {
+		this.customContent = customContent;
+	}
+
+}

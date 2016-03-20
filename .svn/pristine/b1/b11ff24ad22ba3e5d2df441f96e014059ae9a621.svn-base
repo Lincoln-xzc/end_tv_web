@@ -1,0 +1,275 @@
+package com.zyj.util;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+
+import net.sf.json.JSONObject;
+
+import com.baidu.yun.core.log.YunLogEvent;
+import com.baidu.yun.core.log.YunLogHandler;
+import com.baidu.yun.model.BaiduRspAndroidMsg;
+import com.baidu.yun.model.BaiduRspIosMsg;
+import com.baidu.yun.push.auth.PushKeyPair;
+import com.baidu.yun.push.client.BaiduPushClient;
+import com.baidu.yun.push.constants.BaiduPushConstants;
+import com.baidu.yun.push.exception.PushClientException;
+import com.baidu.yun.push.exception.PushServerException;
+import com.baidu.yun.push.model.PushMsgToSingleDeviceRequest;
+import com.baidu.yun.push.model.PushMsgToSingleDeviceResponse;
+import com.zyj.api.enums.BaiduPushEnum;
+
+/**
+ * BaiduPushThread.java
+ * 百度推送
+ */
+
+public class BaiduPushUtil  {
+
+	//--- ceshi--------
+//	private String androidKey = "evNRHqojFlEhGMeCVYxP6oQt";
+//	private String androidSecretKey = "IexFupXbLouXeWZ9ruSG64f93HOhF4M7";
+
+	//用户端 - android
+	
+	private String androidKey = PropertyUtil.getStringVlaue("baidu.androidKey");
+	private String androidSecretKey = PropertyUtil.getStringVlaue("baidu.androidSecretKey");
+	
+	//用户端 - ios
+	private String iosKey = PropertyUtil.getStringVlaue("baidu.iosKey");
+	private String iosSecretKey = PropertyUtil.getStringVlaue("baidu.iosSecretKey");
+	
+	private int msgType;  //消息类型  0：消息；1：通知。默认为0
+	
+	private int deployStatus = 1; //1：开发状态；2：生产状态； 若不指定，则默认设置为生产状态。仅iOS应用推送时使用
+	
+	private int msgExpires = 604800; //消息过期时间 0~604800(86400*7)，默认为5小时(18000秒)
+	
+	private BaiduPushEnum pushEnum;
+	
+	private List<String> channelIdList;
+	
+	private Object obj;
+	
+	private BaiduPushUtil(){}
+	
+	/**
+	 * @param pushEnum
+	 * @param channelId
+	 * @param msgType 消息类型  0：消息；1：通知。默认为0
+	 * @param obj
+	 */
+	public BaiduPushUtil(BaiduPushEnum pushEnum, List<String> channelIdList, int msgType, 
+			Object obj){
+		this.pushEnum = pushEnum;
+		this.channelIdList = channelIdList;
+		this.msgType = msgType;
+		this.obj = obj;
+	}
+	
+	public void push(){
+		if(obj==null || channelIdList==null || channelIdList.size()<1)
+			return ;
+		BaiduPushClient pushClient = this.getPushClient(pushEnum);
+		switch(pushEnum.getDeviceType()){
+			case 3: this.androidPush(pushClient); break;
+			case 4: this.iosPush(pushClient); break;
+			default : break;
+		}
+	}
+	
+	/**
+	 * @Description: Ios 发送消息
+	 * @param pushClient
+	 */
+	private void iosPush(BaiduPushClient pushClient){
+		try {
+			BaiduRspIosMsg msg = (BaiduRspIosMsg)obj;
+			// 4. specify request arguments
+			// make IOS Notification
+			JSONObject notification = new JSONObject();
+			JSONObject jsonAPS = new JSONObject();
+			jsonAPS.put("alert", msg.getAlert());
+			if(StringUtils.isNotEmpty(msg.getSound()))
+				jsonAPS.put("sound", msg.getSound()); // 设置通知铃声样式，例如"ttt"，用户自定义。
+			if(msg.getBadge()!=null)
+				jsonAPS.put("badge", msg.getBadge());
+			notification.put("aps", jsonAPS);
+			Map<String,Object> customMap = msg.getCustomContent();
+			if(customMap!=null){
+				for(String key: customMap.keySet()){
+					if(key==null || customMap.get(key)==null)
+						continue;
+					notification.put(key, customMap.get(key)); //自定义内容，key-value
+				}
+			}
+			
+			for(String channelId: channelIdList){
+				PushMsgToSingleDeviceRequest request = new PushMsgToSingleDeviceRequest()
+				.addChannelId(channelId)
+				.addMsgExpires(this.msgExpires). // 设置message的有效时间
+				addMessageType(this.msgType).// 1：通知,0:透传消息.默认为0 注：IOS只有通知.
+				addMessage(notification.toString())
+				.addDeployStatus(this.deployStatus). // IOS,
+				// DeployStatus
+				// => 1: Developer
+				// 2: Production.
+				addDeviceType(4);// deviceType => 3:android, 4:ios
+				// 5. http request
+				PushMsgToSingleDeviceResponse response = pushClient
+						.pushMsgToSingleDevice(request);
+				// Http请求结果解析打印
+				System.out.println("msgId: " + response.getMsgId() + ",sendTime: "
+						+ response.getSendTime());
+			}
+		} catch (PushClientException e) {
+			/*
+			 * ERROROPTTYPE 用于设置异常的处理方式 -- 抛出异常和捕获异常,'true' 表示抛出, 'false' 表示捕获。
+			 */
+			if (BaiduPushConstants.ERROROPTTYPE) {
+				//throw e;
+			} else {
+				e.printStackTrace();
+			}
+		} catch (PushServerException e) {
+			if (BaiduPushConstants.ERROROPTTYPE) {
+				//throw e;
+			} else {
+				System.out.println(String.format(
+						"requestId: %d, errorCode: %d, errorMessage: %s",
+						e.getRequestId(), e.getErrorCode(), e.getErrorMsg()));
+			}
+		}
+	}
+	
+	/**
+	 * @Description: Android 发消息
+	 */
+	private void androidPush(BaiduPushClient pushClient) {
+		try {
+			BaiduRspAndroidMsg rsp = (BaiduRspAndroidMsg)obj;
+			// 4. specify request arguments
+			//创建 Android的通知
+			JSONObject notification = new JSONObject();
+			notification.put("title", rsp.getTitle());
+			notification.put("description",rsp.getDescription());
+			if(rsp.getNotificationBuilderId()!=null)
+				notification.put("notification_builder_id", rsp.getNotificationBuilderId());
+			if(rsp.getNotificationBasicStyle()!=null)
+			notification.put("notification_basic_style", rsp.getNotificationBasicStyle());
+			if(rsp.getOpenType()!=null)
+				notification.put("open_type", rsp.getOpenType());
+			if(StringUtils.isNotEmpty(rsp.getUrl()))
+				notification.put("url", rsp.getUrl());
+			JSONObject jsonCustormCont = new JSONObject();
+			if(rsp.getCustomContent()!=null){
+				Map<String,Object> customMap = rsp.getCustomContent();
+				for(String key: customMap.keySet()){
+					if(key==null || customMap.get(key)==null)
+						continue;
+					jsonCustormCont.put(key, customMap.get(key)); //自定义内容，key-value
+				}
+			}
+			notification.put("custom_content", jsonCustormCont);
+
+			for(String channelId: channelIdList){
+				PushMsgToSingleDeviceRequest request = new PushMsgToSingleDeviceRequest()
+				.addChannelId(channelId)
+				.addMsgExpires(this.msgExpires). // message有效时间
+				addMessageType(this.msgType).// 1：通知,0:透传消息. 默认为0 注：IOS只有通知.
+				addMessage(notification.toString()).
+				addDeviceType(3);// deviceType => 3:android, 4:ios
+				// 5. http request
+				PushMsgToSingleDeviceResponse response = pushClient
+						.pushMsgToSingleDevice(request);
+				// Http请求结果解析打印
+				System.out.println("msgId: " + response.getMsgId() + ",sendTime: "
+						+ response.getSendTime());
+			}
+		} catch (PushClientException e) {
+			/*
+			 * ERROROPTTYPE 用于设置异常的处理方式 -- 抛出异常和捕获异常,'true' 表示抛出, 'false' 表示捕获。
+			 */
+			if (BaiduPushConstants.ERROROPTTYPE) {
+				//throw e;
+			} else {
+				e.printStackTrace();
+			}
+		} catch (PushServerException e) {
+			if (BaiduPushConstants.ERROROPTTYPE) {
+				//throw e;
+			} else {
+				System.out.println(String.format(
+						"requestId: %d, errorCode: %d, errorMessage: %s",
+						e.getRequestId(), e.getErrorCode(), e.getErrorMsg()));
+			}
+		}
+	}
+	
+	/**
+	 * @Description: 获取pushClient
+	 * @param pushEnum
+	 * @return
+	 */
+	private BaiduPushClient getPushClient(BaiduPushEnum pushEnum){
+		if(pushEnum ==null)
+			throw new RuntimeException("无法获取推送类别");
+		String apiKey=null, secretKey = null;
+		switch(pushEnum){
+			case UserAndroid: 
+				apiKey = this.androidKey;
+				secretKey = this.androidSecretKey;
+				break;
+			case UserIos:
+				apiKey = this.iosKey;
+				secretKey = this.iosSecretKey;
+				break;
+			default :
+				throw new RuntimeException("无法获取推送key");
+		}
+		PushKeyPair pair = new PushKeyPair(apiKey, secretKey);
+
+		// 2. build a BaidupushClient object to access released interfaces
+		BaiduPushClient pushClient = new BaiduPushClient(pair,
+				BaiduPushConstants.CHANNEL_REST_URL);
+
+		// 3. register a YunLogHandler to get detail interacting information
+		// in this request.
+		pushClient.setChannelLogHandler(new YunLogHandler() {
+			@Override
+			public void onHandle(YunLogEvent event) {
+				System.out.println(event.getMessage());
+			}
+		});
+		
+		return pushClient;
+	}
+
+	public static void main(String[] args){
+		List<String> channelList = new ArrayList<>();
+		Map<String,Object> map = new HashMap<>();
+		map.put("type", 5);
+		map.put("record_id", 12);
+		map.put("elder_id", 1);
+		
+		BaiduRspAndroidMsg msg = new BaiduRspAndroidMsg();
+		msg.setTitle("你的老人有一条新的护理记录");
+		msg.setDescription("你的老人有一条新的护理记录");
+		msg.setCustomContent(map);
+//		channelList.add("4032734258046365675");
+		channelList.add("3907045186479783751");
+		new BaiduPushUtil(BaiduPushEnum.UserAndroid, channelList, 1,msg)
+			.push();
+		
+		/*
+		BaiduRspIosMsg msg = new BaiduRspIosMsg();
+		msg.setAlert("你的老人有一条新的护理记录");
+		msg.setCustomContent(map);
+		channelList.add("5083351121139937879");
+		new BaiduPushUtil(BaiduPushEnum.UserIos, channelList, 1,msg).push();
+		*/
+	}
+}
