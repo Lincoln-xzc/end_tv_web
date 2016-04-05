@@ -19,13 +19,14 @@ public class HosWebUser {
 
     private String name;
 
+
   
     private String token;
 
    
     private Date loginTime;
     
-   
+
 	public String getId() {
         return id;
     }
@@ -65,4 +66,5 @@ public class HosWebUser {
 	public void setToken(String token) {
 		this.token = token;
 	}
+
 }

@@ -39,7 +39,9 @@ public class HosWebUserServiceImpl extends CommonFunction implements HosWebUserS
 		
 		
 		if(user!=null){
+
 			map = FieldsUtil.getObjectFields(new String[]{"id","userName","name","token"}, user);
+
 			String token = DateUtil.getCrruentTime("yyyyMMddHHmmss") + user.getId();
 			String userToken = user.getToken();
 			if(StringUtils.isEmpty(userToken) || user.getLoginTime()==null

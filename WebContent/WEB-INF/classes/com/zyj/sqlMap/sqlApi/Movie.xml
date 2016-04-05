@@ -3,10 +3,10 @@
 <mapper namespace="Movie" >
   
   <sql id="Base_Column" >
-   id, url, short_message, name, type, director, starring, score, owner_id, create_data
+   id, url, short_message, name, type, director, staror, score, ownerId, createData
   </sql>
   <sql id="Base_Column_Axis" >
-    id, url, short_message as shortMessage, name, type, director, starring, score, owner_id as ownerId, create_data as createData
+    id, url, short_message as shortMessage, name, type, director, staror, score, ownerId, createData
   </sql>
   
   <select id="selectByCondition" resultType="Movie" parameterType="java.util.HashMap" >
@@ -15,7 +15,7 @@
     from movie
     where 1=1
     <if test="type != null" >
-    and type = #{type} limit 0, #{number}
+    and type = #{type}
     </if>
   </select>
   

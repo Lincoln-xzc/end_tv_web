@@ -4,7 +4,8 @@
 <configuration>
 	
 	<mappers>  
-        <mapper resource="com/zyj/sqlMap/Movies.xml"/>
+
+        <mapper resource="com/zyj/sqlMap/sqlApi/Movie.xml"/>
        
     </mappers>
 </configuration>

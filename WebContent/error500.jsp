@@ -5,7 +5,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>end tv web</title>
-</head>
 <body>
 系统出错了
 </body>

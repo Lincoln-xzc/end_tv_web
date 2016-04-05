@@ -7,6 +7,7 @@ public class Movie {
 	private String name;
 	private String type;
 	private String director;
+	private String staror;
 	private int score;
 	private String ownerId;
 	private String createData;
@@ -16,6 +17,12 @@ public class Movie {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getStaror() {
+		return staror;
+	}
+	public void setStaror(String staror) {
+		this.staror = staror;
 	}
 	public String getUrl() {
 		return url;

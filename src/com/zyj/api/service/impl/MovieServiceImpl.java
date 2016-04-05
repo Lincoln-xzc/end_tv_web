@@ -27,13 +27,10 @@ public class MovieServiceImpl extends CommonFunction implements MovieService {
 		
 		message.put("type", type);
 		message.put("number", number);
-		System.out.println(message);
-		Movie movie = (Movie) this.queryForObject("Movie selectByCondition",message);
 		
-		
-	    result.put("code",ApiResultBean.SUCCESS_CODE);
+		Movie movie = (Movie) this.queryForObject("Movie.selectByCondition",message);
 	
-		result.put("data", movie);
+		result.put("movie", movie);
 		return result;
 	}
 
