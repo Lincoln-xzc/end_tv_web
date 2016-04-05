@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="UserInfo" >
+  
+  <sql id="Base_Column" >
+    id, phone, password, nickname, photo, slogan, birthday, view_age as viewAge, gender, home_identity as homeIdentity, 
+    glamour, fortune, attention, fans, praise, virtual, wishes, status, invite_code as inviteCode, msg_notice as msgNotice, 
+    token, a.create_time as createTime, login_time as loginTime, dynamic_num as dynamicNum
+    ,today_fortune as todayFortune ,use_fortune_time as useFortuneTime
+  </sql>
+  
+  <select id="countUserAttention" parameterType="map" resultType="int">
+  	SELECT COUNT(1) FROM user_attention_user 
+  	WHERE user_id = #{loginUserId} AND attention_id = #{userId}
+  </select>
+  
+  <select id="selectById" resultType="UserInfo" parameterType="java.util.HashMap" >
+    select 
+    <include refid="Base_Column" />, b.home_id as homeId
+    from userinfo a left join user_home b on a.id=b.user_id
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="getUserByToken" resultType="UserInfo" parameterType="java.util.HashMap" >
+    select id, phone, nickname, photo, slogan, birthday, view_age as viewAge, gender, home_identity as homeIdentity, 
+	    glamour, fortune, attention, fans, praise, virtual, status, token
+    from userinfo a
+    where  a.token = #{token}
+  </select>
+  
+  <select id="getUserByCondition" resultType="UserInfo" parameterType="java.util.HashMap" >
+    select 
+    <include refid="Base_Column" /> , b.home_id as homeId
+    from userinfo a left join user_home b on a.id=b.user_id
+    where 1=1
+    <if test="id!=null and id!=0">
+     and a.id = #{id}
+    </if>
+    <if test="phone!=null and phone!=''">
+     and a.phone = #{phone}
+    </if>
+    <if test="password!=null and password!=''">
+     and a.password = #{password}
+    </if>
+    <if test="token!=null and token!=''">
+     and a.token = #{token}
+    </if>
+    <if test="homeId!=null and homeId!=''">
+     and b.home_id = #{homeId}
+    </if>
+  </select>
+  
+  <select id="getUserByIn" resultType="UserInfo" parameterType="java.util.HashMap" >
+    select 
+    <include refid="Base_Column" />
+    from userinfo a 
+    where 1=1
+    <if test="ids!=null and ids!=''">
+     and a.id in (${ids})
+    </if>
+  </select>
+  
+  <!-- 获取用户关注的用户列表 -->
+  <select id="getUserByAttention" resultType="UserInfo" parameterType="java.util.HashMap" >
+    select 
+    <include refid="Base_Column" />
+    from userinfo a right join user_attention_user b on a.id=b.attention_id
+    where 1=1
+    <if test="userId!=null and userId!=0">
+     and b.user_id=${userId}
+    </if>
+    <if test="keyword !=null and keyword !=''">
+    	AND (a.nickname LIKE '%${keyword}%' OR a.phone LIKE '%${keyword}%')
+    </if>
+    order by b.create_time desc
+    <if test="pageSize!=null and pageSize!=0">
+    limit ${start}, ${pageSize}
+    </if>
+  </select>
+  
+  <select id="getUserByAttentionCount" resultType="Integer" parameterType="java.util.HashMap" >
+    select 
+    count(*)
+    from userinfo a right join user_attention_user b on a.id=b.attention_id
+    where 1=1
+    <if test="userId!=null and userId!=0">
+     and b.user_id=${userId}
+    </if>
+  </select>
+  
+  <!-- 获取用户粉丝的列表 -->
+  <select id="getFansByAttention" resultType="UserInfo" parameterType="java.util.HashMap" >
+    select 
+    <include refid="Base_Column" />
+    from userinfo a right join user_attention_user b on a.id=b.user_id
+    where 1=1
+    <if test="userId!=null and userId!=0">
+     and b.attention_id=${userId}
+    </if>
+    order by b.create_time desc
+    <if test="pageSize!=null and pageSize!=0">
+    limit ${start}, ${pageSize}
+    </if>
+  </select>
+  
+  <select id="getFansByAttentionCount" resultType="Integer" parameterType="java.util.HashMap" >
+    select 
+    count(*)
+    from userinfo a right join user_attention_user b on a.id=b.user_id
+    where 1=1
+    <if test="userId!=null and userId!=0">
+     and b.attention_id=${userId}
+    </if>
+  </select>
+  
+  <delete id="deleteById" parameterType="java.util.HashMap" >
+    delete from userinfo
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert" parameterType="java.util.HashMap" >
+    insert into userinfo (id, phone, password, 
+      nickname, photo, slogan, 
+      birthday, view_age, gender, home_identity, 
+      glamour, fortune, attention, 
+      fans, virtual, wishes, 
+      status, invite_code, msg_notice, 
+      token, create_time, login_time)
+    values (#{id,jdbcType=BIGINT}, #{phone,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{nickname,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR}, #{slogan,jdbcType=VARCHAR}, 
+      #{birthday,jdbcType=DATE}, #{viewAge,jdbcType=BIT}, #{gender,jdbcType=CHAR}, #{homeIdentity,jdbcType=BIT}, 
+      #{glamour,jdbcType=BIGINT}, #{fortune,jdbcType=BIGINT}, #{attention,jdbcType=INTEGER}, 
+      #{fans,jdbcType=INTEGER}, #{virtual,jdbcType=BIT}, #{wishes,jdbcType=VARCHAR}, 
+      #{status,jdbcType=BIT}, #{inviteCode,jdbcType=VARCHAR}, #{msgNotice,jdbcType=BIT}, 
+      #{token,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{loginTime,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="java.util.HashMap" >
+ 	<selectKey resultType="java.lang.Long" keyProperty="id">
+    	SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into userinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="nickname != null" >
+        nickname,
+      </if>
+      <if test="photo != null" >
+        photo,
+      </if>
+      <if test="slogan != null" >
+        slogan,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="viewAge != null" >
+        view_age,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="homeIdentity != null" >
+        home_identity,
+      </if>
+      <if test="glamour != null" >
+        glamour,
+      </if>
+      <if test="fortune != null" >
+        fortune,
+      </if>
+      <if test="attention != null" >
+        attention,
+      </if>
+      <if test="fans != null" >
+        fans,
+      </if>
+      <if test="virtual != null" >
+        virtual,
+      </if>
+      <if test="wishes != null" >
+        wishes,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="inviteCode != null" >
+        invite_code,
+      </if>
+      <if test="msgNotice != null" >
+        msg_notice,
+      </if>
+      <if test="token != null" >
+        token,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="loginTime != null" >
+        login_time,
+      </if>
+      <if test="channel != null" >
+        channel,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null" >
+        #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="slogan != null" >
+        #{slogan,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="viewAge != null" >
+        #{viewAge,jdbcType=BIT},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=CHAR},
+      </if>
+      <if test="homeIdentity != null" >
+        #{homeIdentity,jdbcType=BIT},
+      </if>
+      <if test="glamour != null" >
+        #{glamour,jdbcType=BIGINT},
+      </if>
+      <if test="fortune != null" >
+        #{fortune,jdbcType=BIGINT},
+      </if>
+      <if test="attention != null" >
+        #{attention,jdbcType=INTEGER},
+      </if>
+      <if test="fans != null" >
+        #{fans,jdbcType=INTEGER},
+      </if>
+      <if test="virtual != null" >
+        #{virtual,jdbcType=BIT},
+      </if>
+      <if test="wishes != null" >
+        #{wishes,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=BIT},
+      </if>
+      <if test="inviteCode != null" >
+        #{inviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="msgNotice != null" >
+        #{msgNotice,jdbcType=BIT},
+      </if>
+      <if test="token != null" >
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginTime != null" >
+        #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="channel != null" >
+        #{channel},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByIdSelective" parameterType="java.util.HashMap" >
+    update userinfo
+    <set >
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null" >
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="slogan != null" >
+        slogan = #{slogan,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null and birthday!=''" >
+        birthday = #{birthday},
+      </if>
+      <if test="birthday==''">
+      	birthday=null,
+      </if>
+      <if test="viewAge != null" >
+        view_age = #{viewAge,jdbcType=BIT},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=CHAR},
+      </if>
+      <if test="homeIdentity != null" >
+        home_identity = #{homeIdentity,jdbcType=BIT},
+      </if>
+      <if test="glamour != null" >
+        glamour = #{glamour,jdbcType=BIGINT},
+      </if>
+      <if test="fortune != null" >
+        fortune = #{fortune,jdbcType=BIGINT},
+      </if>
+      <if test="attention != null" >
+        attention = #{attention,jdbcType=INTEGER},
+      </if>
+      <if test="fans != null" >
+        fans = #{fans,jdbcType=INTEGER},
+      </if>
+      <if test="virtual != null" >
+        virtual = #{virtual,jdbcType=BIT},
+      </if>
+      <if test="wishes != null" >
+        wishes = #{wishes,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIT},
+      </if>
+      <if test="inviteCode != null" >
+        invite_code = #{inviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="msgNotice != null" >
+        msg_notice = #{msgNotice,jdbcType=BIT},
+      </if>
+      <if test="token != null" >
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginTime != null" >
+        login_time = #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <update id="updateById" parameterType="java.util.HashMap" >
+    update userinfo
+    set phone = #{phone,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      photo = #{photo,jdbcType=VARCHAR},
+      slogan = #{slogan,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=DATE},
+      view_age = #{viewAge,jdbcType=BIT},
+      gender = #{gender,jdbcType=CHAR},
+      home_identity = #{homeIdentity,jdbcType=BIT},
+      glamour = #{glamour,jdbcType=BIGINT},
+      fortune = #{fortune,jdbcType=BIGINT},
+      attention = #{attention,jdbcType=INTEGER},
+      fans = #{fans,jdbcType=INTEGER},
+      virtual = #{virtual,jdbcType=BIT},
+      wishes = #{wishes,jdbcType=VARCHAR},
+      status = #{status,jdbcType=BIT},
+      invite_code = #{inviteCode,jdbcType=VARCHAR},
+      msg_notice = #{msgNotice,jdbcType=BIT},
+      token = #{token,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      login_time = #{loginTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <!-- 修改用户魅力值和财富值  -->
+  <update id="updateUserGlamourFortune" parameterType="map">
+  	update userinfo set glamour = glamour+#{glamour}, fortune = fortune+#{fortune}
+  	where id=#{userId}
+  </update>
+  
+  <!-- 修改用户被点赞数  -->
+  <update id="updateUserPraise" parameterType="map">
+  	update userinfo set praise = praise+#{step}
+  	where id=#{userId}
+  </update>
+  
+  <!-- 修改用户帖子数  -->
+  <update id="updateUserDynamicNum" parameterType="map">
+  	update userinfo set dynamic_num = dynamic_num+#{step}
+  	where id in (${userIds})
+  </update>
+  
+  <update id="updateUserFans" parameterType="map">
+  	update userinfo set fans = fans +#{step}
+  	where id=#{attentionId}
+  </update>
+  
+  <update id="updateUserAttention" parameterType="map">
+  	update userinfo set attention = attention +#{step}
+  	where id=#{userId}
+  </update>
+  
+  <!-- 插入验证码 -->
+  <insert id="insertVerifyCode" parameterType="java.util.HashMap">
+		<selectKey resultType="java.lang.Integer" keyProperty="codeId">
+	    	SELECT LAST_INSERT_ID()
+	    </selectKey>
+	    <![CDATA[
+			insert into user_verify_code(mobile,code,content,type,valid_time,result_code,create_time) 
+			values(#{mobile},#{code},#{content},#{type},#{validTime},#{resultCode},#{createTime})
+		]]>
+  </insert>
+  
+  <!-- 修改密码 -->
+  <update id="updateUserByPhone" parameterType="java.util.HashMap">
+		<![CDATA[
+			update userinfo u  set u.password=#{password} where u.phone=#{phone}
+		]]>
+  </update>
+  
+</mapper>

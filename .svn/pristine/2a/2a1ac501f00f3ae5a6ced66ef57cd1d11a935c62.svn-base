@@ -1,0 +1,53 @@
+#Created by JInto - www.guh-software.de
+#Tue Jul 03 14:34:22 CST 2012
+c3p0.acquireIncrement=3
+c3p0.acquireRetryAttempts=30
+c3p0.autoCommitOnClose=false
+c3p0.breakAfterAcquireFailure=false
+c3p0.idleConnectionTestPeriod=1800
+c3p0.initialPoolSize=3
+c3p0.maxIdleTime=1800
+c3p0.maxPoolSize=100
+c3p0.maxStatements=0
+c3p0.maxStatementsPerConnection=0
+c3p0.minPoolSize=3
+c3p0.numHelperThreads=3
+c3p0.testConnectionOnCheckout=false
+hibernate.dialect=org.hibernate.dialect.MySQLDialect
+jdbc.driver=com.mysql.jdbc.Driver
+jdbc.url=jdbc\:mysql\://59.61.92.182/smarthos?useUnicode\=true&zeroDateTimeBehavior\=convertToNull&characterEncoding\=utf8
+jdbc.user=root
+jdbc.pwd=zyj20132014
+proxool.alias=biokee
+proxool.houseKeepingSleepTime=30000
+proxool.houseKeepingTestSql=select CURRENT_DATE from dual
+proxool.maximumConnectionCount=100
+proxool.maximumConnectionLifetime=14400000
+proxool.minimumConnectionCount=3
+proxool.prototypeCount=0
+proxool.simultaneousBuildThrottle=20
+proxool.statistics=30m
+proxool.statisticsLogLevel=DEBUG
+proxool.trace=true
+proxool.verbose=false
+
+# ---- system property -----
+server.serverPort=http://59.61.92.182:8901
+server.file_base_url=http://59.61.92.182:8901
+server.api_url=http://59.61.92.182:8901/weihomeApi
+
+#alipay account
+alipay.account = rongde@100xiaoxin.cn
+alipay.partner = 2088021319579562
+alipay.private_key = MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAL0rciEYWo215fZbCNXjOSdxxxwRTM0XO0gaU/8Oe4bHOAhm3EX3O65wupH/cF54kF0yOFKxnSrrJSILQ3l62DNfyl3Lyl0bYLdjbxGxCK6mJwuk70RFKJflRaxUPsxhIDMoo/iVexNYGRrHKpgcyH4Hj21LMNTMiuowpIfff2LdAgMBAAECgYBUhiwZs4sKlMMq36REBaJNCJ6h4O0DGqVHY1Qyu+Lf5vYXcvZrYLvPBtmmUI+B9rbynXTjJi+GtMjDvGqqxgQBs4FLoCJnCRXmRF6Ohom0gWn4srlQMM/d4m1yhlzkN0u+XCI9rADXICz2wvEVRf66LwmadETHe4ODUxKJDuAuVQJBAOmtaQ8vKJm/Wzj3J18OeaVXAUPZq5XijjsblaJQUTfY0FuMDhTv3qxVMQPc8l6kSDkbQx0OxOxIvF9zvXGTTmsCQQDPPZk4B4myECXUj0RP9vIfrW3MjZN9m7S44izVBzU6684NbCz+ZJ/9sDej0KPIpk+mksje/vbGPdXh2sY8/VXXAkBBYOMj/G2/lmpPZdb+IW6nc9BGy3/WT6y7nNwgrZgLp/2jn2vRL8t9K9iq3AZztEMAtz/vwVIXScJqclduj2hBAkEAzi836IG/YjQknzUmvvQu8otGqXPV4OtwQ11rQ0rXj9aZe8s7fKI6d1jCEq56tR+aMVzqkspSVOuihwF1p6pYowJBAKVFPb1UcZUGjpSSObb/9wXPzXocCq/5yH6d3eiuiz64cDDGJFnOfEREbb5lK0OZGCCYqnH+EbmCLPhENLjMN3I=
+alipay.ali_public_key = MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDI6d306Q8fIfCOaTXyiUeJHkrIvYISRcc73s3vF1ZT7XN8RNPwJxo8pWaJMmvyTn9N4HQ632qJBVHf8sxHi/fEsraprwCtzvzQETrNRwVxLO5jVmRGi60j8Ue1efIlzPXV9je9mkjzOmdssymZkh2QhUrCmZYI/FCEa3/cNMW0QIDAQAB/fEsraprwCtzvzQETrNRwVxLO5jVmRGi60j8Ue1efIlzPXV9je9mkjzOmdssymZkh2QhUrCmZYI/FCEa3/cNMW0QIDAQAB/fEsraprwCtzvzQETrNRwVxLO5jVmRGi60j8Ue1efIlzPXV9je9mkjzOmdssymZkh2QhUrCmZYI/FCEa3/cNMW0QIDAQAB
+
+# ---- baidu push key -----
+# user - android
+baidu.androidKey = pN9fu6GhZs3nrY7uD86WzKWu
+baidu.androidSecretKey = cPHvxxmSuqiFAEyxQOdHOFMnpXIz67I8
+	
+# user - ios
+baidu.iosKey = sOzgS7yaw1UrFwCaKHcRotOz
+baidu.iosSecretKey = z9Nkjol8tfjkgmh9cVGLhudhy7aGbmKS
+
