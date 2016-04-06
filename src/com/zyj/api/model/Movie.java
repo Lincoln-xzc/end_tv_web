@@ -2,7 +2,7 @@ package com.zyj.api.model;
 
 public class Movie {
 	private String id;
-	private String  url;
+	private String imgId;
 	private String shortMessage;
 	private String name;
 	private String type;
@@ -24,11 +24,12 @@ public class Movie {
 	public void setStaror(String staror) {
 		this.staror = staror;
 	}
-	public String getUrl() {
-		return url;
+
+	public String getImgId() {
+		return imgId;
 	}
-	public void setUrl(String url) {
-		this.url = url;
+	public void setImgId(String imgId) {
+		this.imgId = imgId;
 	}
 	public String getShortMessage() {
 		return shortMessage;

@@ -1,11 +1,14 @@
 package com.zyj.api.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
 import com.zyj.api.model.Movie;
+import com.zyj.api.model.MovieMessage;
 import com.zyj.api.service.MovieService;
 import com.zyj.framework.bean.ApiResultBean;
 import com.zyj.framework.service.impl.CommonFunction;
@@ -17,21 +20,34 @@ import net.sf.json.JSONObject;
 public class MovieServiceImpl extends CommonFunction implements MovieService {
 
 	@Override
-	public Map<String, Object> getMovie(JSONObject param) {
+	public List<Object> getMovie(JSONObject param) {
 		// TODO Auto-generated method stub
 		String type = StringUtil.ToString(param.getString("type"));
-		String number = StringUtil.ToString(param.getString("number"));
-		System.out.println("type:"+type);
+		int number = Integer.parseInt(param.getString("number"));
+	
 		Map<String, Object> message = new HashMap<String, Object>();
-		Map<String, Object> result = new HashMap<String, Object>();
+		List<Object> result = new ArrayList<Object>();
 		
 		message.put("type", type);
 		message.put("number", number);
 		
-		Movie movie = (Movie) this.queryForObject("Movie.selectByCondition",message);
-	
-		result.put("movie", movie);
-		return result;
+		List<Object> movie = (List<Object>) this.queryForList("Movie.selectByCondition",message);
+		
+		return movie;
+	}
+
+	@Override
+	public Object getMovieMessage(JSONObject param) {
+		// TODO Auto-generated method stub
+		String id = StringUtil.ToString(param.getString("imageId"));
+		
+		Map<String, Object> img = new HashMap<String, Object>();
+		
+		img.put("id", id);
+		
+		MovieMessage message = (MovieMessage) this.queryForObject("MovieMessage.selectByCondition", img); 
+		
+		return message;
 	}
 
 }

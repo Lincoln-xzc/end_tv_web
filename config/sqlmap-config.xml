@@ -6,6 +6,7 @@
 	<mappers>  
 
         <mapper resource="com/zyj/sqlMap/sqlApi/Movie.xml"/>
+        <mapper resource="com/zyj/sqlMap/sqlApi/MovieMessage.xml"/>
        
     </mappers>
 </configuration>

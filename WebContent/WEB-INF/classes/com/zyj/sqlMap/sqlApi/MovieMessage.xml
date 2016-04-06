@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="Movie" >
+<mapper namespace="MovieMessage" >
   
   <sql id="Base_Column" >
-   id, img_id, short_message, name, type, director, staror, score, ownerId, createData
+   id, url
   </sql>
   <sql id="Base_Column_Axis" >
-    id, img_id as imgId, short_message as shortMessage, name, type, director, staror, score, ownerId, createData
+    id, url
   </sql>
   
-  <select id="selectByCondition" resultType="Movie" parameterType="java.util.HashMap" >
+  <select id="selectByCondition" resultType="MovieMessage" parameterType="java.util.HashMap" >
     select 
     <include refid="Base_Column_Axis" />
-    from movie
+    from movie_message
     where 1=1
-    <if test="type != null" >
-    and type = #{type}
+    <if test="id != null" >
+    and id = #{id}
     </if>
-    limit 0, #{number}
+   
   </select>
   
  <!--  <delete id="deleteById" parameterType="java.util.HashMap" >

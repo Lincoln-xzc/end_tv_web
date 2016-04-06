@@ -1,10 +1,12 @@
 package com.zyj.api.service;
 
-import java.util.Map;
+import java.util.List;
 
 import net.sf.json.JSONObject;
 
 public interface MovieService {
 	
-	public Map<String, Object> getMovie(JSONObject param);
+	public List<Object> getMovie(JSONObject param);
+	
+	public Object getMovieMessage(JSONObject param);
 }
