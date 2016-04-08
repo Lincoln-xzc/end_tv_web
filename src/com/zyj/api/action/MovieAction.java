@@ -1,7 +1,6 @@
 package com.zyj.api.action;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,13 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.zyj.api.model.Movie;
 import com.zyj.api.model.MovieMessage;
 import com.zyj.api.service.MovieService;
-import com.zyj.api.util.PhotoUtils;
 import com.zyj.framework.action.BaseAction;
 import com.zyj.framework.bean.ApiResultBean;
-import com.zyj.util.StringUtil;
 
 import net.sf.json.JSONObject;
 
