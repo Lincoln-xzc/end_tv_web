@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2016-04-07 18:48:46
+Date: 2016-04-08 17:24:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -433,3 +433,24 @@ INSERT INTO `movie_message` VALUES ('96', 'F:\\tv_photos\\movie\\a8.jpg');
 INSERT INTO `movie_message` VALUES ('97', 'F:\\tv_photos\\movie\\a9.jpg');
 INSERT INTO `movie_message` VALUES ('98', 'F:\\tv_photos\\movie\\a10.jpg');
 INSERT INTO `movie_message` VALUES ('99', 'F:\\tv_photos\\movie\\a11.jpg');
+
+-- ----------------------------
+-- Table structure for `user`
+-- ----------------------------
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+  `id` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `loginTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of user
+-- ----------------------------
+INSERT INTO `user` VALUES ('40fb818eeef54d3ba71acabf45af8d3a', 'bbb', 'bbb', 'xzc524813657@sina.com', '2016-04-08 15:55:16');
+INSERT INTO `user` VALUES ('6d88afe91eb14aba9e1e9b36e72846e5', 'aaa', 'aaa', 'xzc524813657@sina.com', '2016-04-08 15:53:35');
+INSERT INTO `user` VALUES ('cb6f473bf9724deb832638bb67bb0fd0', 'ddd', 'ddd', 'xzc524813657@sina.com', '2016-04-08 15:56:15');
+INSERT INTO `user` VALUES ('dec797bdc96f4931923fc7bd0a14fa39', 'xzc', 'xzc', 'xzc524813657@sina.com', '2016-04-08 15:38:51');
