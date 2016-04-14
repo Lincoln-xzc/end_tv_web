@@ -50,4 +50,15 @@ public class MovieServiceImpl extends CommonFunction implements MovieService {
 		return message;
 	}
 
+	@Override
+	public List<Object> modifyMovies(JSONObject param) {
+		// TODO Auto-generated method stub
+		String name =StringUtil.ToString(param.getString("movieName"));
+		System.out.println(name);
+		Map<String, Object> movie = new HashMap<String, Object>();
+		movie.put("name", name);
+		List<Object> movies = this.queryForList("Movie.selectByName", movie);
+		return movies;
+	}
+
 }

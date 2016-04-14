@@ -31,6 +31,7 @@ public class MovieAction extends BaseAction {
 	@Autowired
 	private MovieService movieService;
 	
+	//获取影片
 	@RequestMapping(value="/getMovies",method= RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> getMovies(HttpServletRequest request, HttpServletResponse response){
@@ -54,6 +55,8 @@ public class MovieAction extends BaseAction {
 		return movie;
 		
 	}
+	
+	//获取照片
 	@RequestMapping(value="/getPath/{imageId}",method=RequestMethod.GET)
 	public void getPath(HttpServletRequest request, HttpServletResponse response,@PathVariable String imageId) throws Exception{
 	
@@ -72,6 +75,25 @@ public class MovieAction extends BaseAction {
 		OutputStream ops = response.getOutputStream();//得到像客户端输出的二进制数据的对象
 		ops.write(data);
 		ops.close();
+	};
+	
+	//通过电影名查询
+	@RequestMapping(value="/findMovies", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> findMovies(HttpServletRequest request, HttpServletResponse response){
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Object> movies = new ArrayList<Object>();
+		try {
+			JSONObject params = this.getParameter(request);
+			movies = movieService.modifyMovies(params);
+			result.put("data", movies);
+			result.put("code", ApiResultBean.SUCCESS_CODE);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result.put("code", ApiResultBean.ERROR_CODE);
+		}
+		return result;
 		
-	}
+	} 
 }

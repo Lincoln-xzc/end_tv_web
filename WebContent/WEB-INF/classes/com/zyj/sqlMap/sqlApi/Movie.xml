@@ -20,6 +20,15 @@
     limit 0, #{number}
   </select>
   
+   <select id="selectByName" resultType="Movie" parameterType="java.util.HashMap" >
+    select 
+    <include refid="Base_Column_Axis" />
+    from movie
+    where 1=1
+    <if test="name != null" >
+    and name = #{name}
+    </if>
+  </select>
  <!--  <delete id="deleteById" parameterType="java.util.HashMap" >
     delete from hos_web_user
     where id = #{id,jdbcType=VARCHAR}
