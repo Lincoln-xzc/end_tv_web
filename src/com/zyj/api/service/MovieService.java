@@ -12,4 +12,6 @@ public interface MovieService {
 	public Object getMovieMessage(JSONObject param);
 	
 	public List<Object> modifyMovies(JSONObject param);
+
+	public List<Object> modifyByPage(JSONObject params);
 }

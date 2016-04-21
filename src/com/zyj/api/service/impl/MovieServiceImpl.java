@@ -11,6 +11,7 @@ import com.zyj.api.model.Movie;
 import com.zyj.api.model.MovieMessage;
 import com.zyj.api.service.MovieService;
 import com.zyj.framework.bean.ApiResultBean;
+import com.zyj.framework.bean.PageResultBean;
 import com.zyj.framework.service.impl.CommonFunction;
 import com.zyj.util.StringUtil;
 
@@ -59,6 +60,27 @@ public class MovieServiceImpl extends CommonFunction implements MovieService {
 		movie.put("name", name);
 		List<Object> movies = this.queryForList("Movie.selectByName", movie);
 		return movies;
+	}
+
+	@Override
+	public List<Object> modifyByPage(JSONObject params) {
+		// TODO Auto-generated method stub
+		List<Object> resultData = new ArrayList<Object>();
+		String type = StringUtil.ToString(params.getString("type"));
+		System.out.println(type);
+		int size = Integer.parseInt(params.getString("size"));
+		int currentPage = Integer.parseInt(params.getString("currentPage"));
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("type", type);
+		PageResultBean prb = new PageResultBean();
+		prb.setPageSize(size);
+		prb.setCurrentPage(currentPage);
+		PageResultBean resultPrb = new PageResultBean();
+		String orderBy = "asc";
+		resultPrb = this.queryForPage(prb, "Movie.selectByType", "Movie.selectPage", data, orderBy);
+		resultData.add(resultPrb);
+		System.out.println(resultPrb);
+		return resultData;
 	}
 
 }

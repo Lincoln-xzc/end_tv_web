@@ -94,6 +94,25 @@ public class MovieAction extends BaseAction {
 			result.put("code", ApiResultBean.ERROR_CODE);
 		}
 		return result;
-		
 	} 
+	
+	//分页查询
+	@RequestMapping(value="/findAll", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> findPage(HttpServletRequest request, HttpServletResponse response){
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Object> resultDatas = new ArrayList<Object>(); 
+		try {
+			JSONObject params = this.getParameter(request);
+			resultDatas = movieService.modifyByPage(params);
+			result.put("data",resultDatas);
+			result.put("code", ApiResultBean.SUCCESS_CODE);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result.put("code", ApiResultBean.ERROR_CODE);
+		}
+		
+		return result;
+	}
 }
