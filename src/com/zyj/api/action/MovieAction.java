@@ -13,10 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zyj.api.model.Movie;
 import com.zyj.api.model.MovieMessage;
 import com.zyj.api.service.MovieService;
 import com.zyj.framework.action.BaseAction;
@@ -94,6 +96,45 @@ public class MovieAction extends BaseAction {
 			result.put("code", ApiResultBean.ERROR_CODE);
 		}
 		return result;
-		
 	} 
+	
+	//添加前端页面数据
+	@RequestMapping(value="/save",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> save(HttpServletRequest request, HttpServletResponse response){
+		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject params;
+		try {
+			params = this.getParameter(request);
+			int number = movieService.save(params);
+			result.put("code",ApiResultBean.SUCCESS_CODE);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result.put("code", ApiResultBean.ERROR_CODE);
+		}
+		
+		return result;
+		
+	}
+	
+	//分页查询
+	@RequestMapping(value="/findAll", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> findPage(HttpServletRequest request, HttpServletResponse response){
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Object> resultDatas = new ArrayList<Object>(); 
+		try {
+			JSONObject params = this.getParameter(request);
+			resultDatas = movieService.modifyByPage(params);
+			result.put("data",resultDatas);
+			result.put("code", ApiResultBean.SUCCESS_CODE);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result.put("code", ApiResultBean.ERROR_CODE);
+		}
+		
+		return result;
+	}
 }

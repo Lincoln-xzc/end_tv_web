@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import com.zyj.api.model.Movie;
 import com.zyj.api.model.MovieMessage;
 import com.zyj.api.service.MovieService;
 import com.zyj.framework.bean.ApiResultBean;
+import com.zyj.framework.bean.PageResultBean;
 import com.zyj.framework.service.impl.CommonFunction;
 import com.zyj.util.StringUtil;
 
@@ -24,11 +26,11 @@ public class MovieServiceImpl extends CommonFunction implements MovieService {
 		// TODO Auto-generated method stub
 		String type = StringUtil.ToString(param.getString("type"));
 		int number = Integer.parseInt(param.getString("number"));
-	
+		System.out.println(type);
 		Map<String, Object> message = new HashMap<String, Object>();
 		List<Object> result = new ArrayList<Object>();
 		
-		message.put("type", type);
+		message.put("recommand", type);
 		message.put("number", number);
 		
 		List<Object> movie = (List<Object>) this.queryForList("Movie.selectByCondition",message);
@@ -59,6 +61,44 @@ public class MovieServiceImpl extends CommonFunction implements MovieService {
 		movie.put("name", name);
 		List<Object> movies = this.queryForList("Movie.selectByName", movie);
 		return movies;
+	}
+
+	@Override
+	public List<Object> modifyByPage(JSONObject params) {
+		// TODO Auto-generated method stub
+		List<Object> resultData = new ArrayList<Object>();
+		String type = StringUtil.ToString(params.getString("type"));
+		System.out.println(type);
+		int size = Integer.parseInt(params.getString("size"));
+		int currentPage = Integer.parseInt(params.getString("currentPage"));
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("type", type);
+		PageResultBean prb = new PageResultBean();
+		prb.setPageSize(size);
+		prb.setCurrentPage(currentPage);
+		PageResultBean resultPrb = new PageResultBean();
+		String orderBy = "asc";
+		resultPrb = this.queryForPage(prb, "Movie.selectByType", "Movie.selectPage", data, orderBy);
+		resultData.add(resultPrb);
+
+		return resultData;
+	}
+
+	@Override
+	public int save(JSONObject param) {
+		// TODO Auto-generated method stub
+		Map<String, Object> data = new HashMap<String, Object>();
+		String movieId = StringUtil.ToString(param.getString("movieId"));
+		System.out.println(movieId);
+		String recommand = StringUtil.ToString(param.getString("recommand"));
+		UUID uuid = UUID.randomUUID();
+		String str = uuid.toString();
+        String id = str.substring(0, 8) + str.substring(9, 13) + str.substring(14, 18) + str.substring(19, 23) + str.substring(24);
+		data.put("id", id);
+		data.put("movieId", movieId);
+		data.put("recommand", recommand);
+		int number = this.insert("Movie.insert", data);
+		return number;
 	}
 
 }

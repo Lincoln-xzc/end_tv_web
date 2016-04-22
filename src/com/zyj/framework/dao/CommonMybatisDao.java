@@ -79,8 +79,9 @@ public class CommonMybatisDao extends SqlSessionDaoSupport {
 
 	public PageResultBean queryForPage(PageResultBean prb, String querySql,
 			String countSql, Object parameter, String orderBy) {
-		int count = sqlSessionTemplate.selectOne(countSql, parameter);
 
+		int count = sqlSessionTemplate.selectOne(countSql, parameter);
+        
 		prb.setTotalResult(count);
 		int pagesize = prb.getPageSize();
 		if (pagesize == 0) {

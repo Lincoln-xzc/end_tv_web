@@ -3,13 +3,13 @@
 <mapper namespace="Movie" >
   
   <sql id="Base_Column" >
-   id, img_id, short_message, name, type, director, staror, score, ownerId, createData
+   id, imgId, shortMessage, name, type, director, staror, score, ownerId, createData
   </sql>
   <sql id="Base_Column_Axis" >
-    id, img_id as imgId, short_message as shortMessage, name, type, director, staror, score, ownerId, createData
+    id, imgId, shortMessage, name, type, director, staror, score, ownerId, createData
   </sql>
   
-  <select id="selectByCondition" resultType="Movie" parameterType="java.util.HashMap" >
+<!--   <select id="selectByCondition" resultType="Movie" parameterType="java.util.HashMap" >
     select 
     <include refid="Base_Column_Axis" />
     from movie
@@ -18,7 +18,31 @@
     and type = #{type}
     </if>
     limit 0, #{number}
+    
+  </select> -->
+  <select id="selectByCondition" resultType="Movie" parameterType="java.util.HashMap" >
+   <!--  select a.* from movie a left join movie_recommand a.id = b.movieId where b.recommand = #{recommand} 
+   from movie where id = (select movieId from movie_recommand where recommand = #{recommand})-->
+   select a.* from movie a left join movie_recommand b on a.id = b.movieId where b.recommand = #{recommand}
   </select>
+  
+    <select id="selectByType" resultType="Movie" parameterType="java.util.HashMap" >
+    select 
+    <include refid="Base_Column_Axis" />
+    from movie
+    where 1=1
+    <if test="type != null" >
+    and type = #{type}
+    </if>
+  </select>
+  
+    <select id="selectPage" resultType="int"  parameterType="java.util.HashMap" >
+    select count(*) c from movie where 1=1
+    <if test="type != null" >
+    and type = #{type}
+    </if>
+  </select>
+  
   
    <select id="selectByName" resultType="Movie" parameterType="java.util.HashMap" >
     select 
@@ -29,27 +53,17 @@
     and name = #{name}
     </if>
   </select>
+  
+  <insert id="insert" parameterType="java.util.HashMap" >
+    insert into movie_recommand (id, movieId, recommand)
+    values (#{id,jdbcType=VARCHAR}, #{movieId,jdbcType=VARCHAR}, #{recommand,jdbcType=VARCHAR}
+      )
+  </insert>
  <!--  <delete id="deleteById" parameterType="java.util.HashMap" >
     delete from hos_web_user
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="java.util.HashMap" >
-    insert into hos_web_user (id, user_name, password, 
-      name, phone, gender, nation, 
-      nplace, birthday, job, 
-      educational, school, major, 
-      office_phone, mail, token, 
-      channel, create_user, create_time, login_time, avatar
-      )
-    values (#{id,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{gender,jdbcType=CHAR}, #{nation,jdbcType=VARCHAR}, 
-      #{nplace,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, 
-      #{educational,jdbcType=VARCHAR}, #{school,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR}, 
-      #{officePhone,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, 
-      #{channel,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{loginTime,jdbcType=TIMESTAMP},
-      #{avatar,jdbcType=VARCHAR}
-      )
-  </insert>
+  
   <insert id="insertSelective" parameterType="java.util.HashMap" >
     insert into hos_web_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
