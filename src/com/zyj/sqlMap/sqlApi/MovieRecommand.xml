@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="MovieRecommand" >
+  
+  <sql id="Base_Column" >
+   id, movieId, recommand, tip
+  </sql>
+  <sql id="Base_Column_Axis" >
+    id, movieId, recommand, tip
+  </sql>
+  
+
+  
+  <insert id="insert" parameterType="java.util.HashMap" >
+    insert into movie_recommand (id, movieId, recommand,tip)
+    values (#{id,jdbcType=VARCHAR}, #{movieId,jdbcType=VARCHAR}, #{recommand,jdbcType=VARCHAR},#{tip,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  
+  <delete id="deleteById" parameterType="java.util.HashMap" >
+    delete from movie_recommand
+    where movieId = #{movieId,jdbcType=VARCHAR}
+  </delete>
+ 
+</mapper>

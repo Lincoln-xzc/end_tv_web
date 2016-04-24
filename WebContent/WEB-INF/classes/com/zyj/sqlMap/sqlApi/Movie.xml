@@ -19,11 +19,15 @@
     </if>
     limit 0, #{number}
     
-  </select> -->
+  </select> 
+  -->
   <select id="selectByCondition" resultType="Movie" parameterType="java.util.HashMap" >
    <!--  select a.* from movie a left join movie_recommand a.id = b.movieId where b.recommand = #{recommand} 
    from movie where id = (select movieId from movie_recommand where recommand = #{recommand})-->
    select a.* from movie a left join movie_recommand b on a.id = b.movieId where b.recommand = #{recommand}
+   <if test="tip != null" >
+    and b.tip = #{tip}
+    </if>
   </select>
   
     <select id="selectByType" resultType="Movie" parameterType="java.util.HashMap" >
@@ -59,6 +63,8 @@
     values (#{id,jdbcType=VARCHAR}, #{movieId,jdbcType=VARCHAR}, #{recommand,jdbcType=VARCHAR}
       )
   </insert>
+  
+  
  <!--  <delete id="deleteById" parameterType="java.util.HashMap" >
     delete from hos_web_user
     where id = #{id,jdbcType=VARCHAR}

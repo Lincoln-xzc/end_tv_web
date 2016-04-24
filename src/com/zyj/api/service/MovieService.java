@@ -16,4 +16,6 @@ public interface MovieService {
 	public List<Object> modifyByPage(JSONObject params);
 	
 	public int save(JSONObject param);
+	
+	public int delete(JSONObject param);
 }
