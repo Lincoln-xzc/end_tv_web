@@ -3,10 +3,10 @@
 <mapper namespace="Movie" >
   
   <sql id="Base_Column" >
-   id, imgId, shortMessage, name, type, director, staror, score, ownerId, createData
+   id, imgId, shortMessage, name, type, tip,director, staror, score, ownerId, createData
   </sql>
   <sql id="Base_Column_Axis" >
-    id, imgId, shortMessage, name, type, director, staror, score, ownerId, createData
+    id, imgId, shortMessage, name, type, tip,director, staror, score, ownerId, createData
   </sql>
   
 <!--   <select id="selectByCondition" resultType="Movie" parameterType="java.util.HashMap" >

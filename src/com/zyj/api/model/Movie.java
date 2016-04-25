@@ -6,6 +6,7 @@ public class Movie {
 	private String shortMessage;
 	private String name;
 	private String type;
+	private String tip;
 	private String director;
 	private String staror;
 	private int score;
@@ -42,6 +43,13 @@ public class Movie {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getTip() {
+		return tip;
+	}
+	public void setTip(String tip) {
+		this.tip = tip;
 	}
 	public String getType() {
 		return type;
