@@ -7,10 +7,12 @@ public class Movie {
 	private String name;
 	private String type;
 	private String tip;
+	private String area;
 	private String director;
 	private String staror;
 	private int score;
 	private String ownerId;
+	private String releaseDate;
 	private String createData;
 	
 	public String getId() {
@@ -80,6 +82,18 @@ public class Movie {
 	}
 	public void setCreateData(String createData) {
 		this.createData = createData;
+	}
+	public String getArea() {
+		return area;
+	}
+	public void setArea(String area) {
+		this.area = area;
+	}
+	public String getReleaseDate() {
+		return releaseDate;
+	}
+	public void setReleaseDate(String releaseDate) {
+		this.releaseDate = releaseDate;
 	}
     
 	

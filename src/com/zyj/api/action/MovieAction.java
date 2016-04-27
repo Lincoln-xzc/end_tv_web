@@ -1,7 +1,12 @@
 package com.zyj.api.action;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,17 +15,21 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.zyj.api.model.Movie;
 import com.zyj.api.model.MovieMessage;
 import com.zyj.api.service.MovieService;
+import com.zyj.api.util.FileUtil;
 import com.zyj.framework.action.BaseAction;
 import com.zyj.framework.bean.ApiResultBean;
 
@@ -136,5 +145,39 @@ public class MovieAction extends BaseAction {
 		}
 		
 		return result;
+	}
+	
+	//上传图片
+	@RequestMapping(value="/upload", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> saveImage(HttpServletRequest request, HttpServletResponse response, @RequestParam("files") MultipartFile[] files) throws IOException{
+	/*	PrintWriter writer = response.getWriter();
+		InputStream in = request.getInputStream();
+		File f = new File("F:\\tv_photos\\main");
+		System.out.println(f);
+		FileOutputStream fout = new FileOutputStream(f);
+		byte[] b=new byte[1024];
+		int n=0;
+        while ((n=in.read(b))!=-1){
+            fout.write(b,0,n);
+        }
+        fout.close();
+        in.close();
+        writer.println("Finished uploading files!");
+        writer.close();*/
+		for(MultipartFile multipartFile : files){
+			String path = "F:\\tv_photos\\main";
+			String newName = "test";
+			System.out.println(multipartFile.getOriginalFilename());
+			try {
+				FileUtil.upload(multipartFile, path, newName);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return null;
+		
 	}
 }
