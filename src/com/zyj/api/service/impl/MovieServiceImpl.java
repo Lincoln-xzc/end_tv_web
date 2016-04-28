@@ -1,6 +1,7 @@
 package com.zyj.api.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.zyj.api.model.Image;
 import com.zyj.api.model.Movie;
 import com.zyj.api.model.MovieMessage;
 import com.zyj.api.service.MovieService;
@@ -21,6 +23,7 @@ import net.sf.json.JSONObject;
 @Service("MovieService")
 public class MovieServiceImpl extends CommonFunction implements MovieService {
 
+	UUID uuid = UUID.randomUUID();
 	@Override
 	public List<Object> getMovie(JSONObject param) {
 		// TODO Auto-generated method stub
@@ -99,7 +102,6 @@ public class MovieServiceImpl extends CommonFunction implements MovieService {
 		System.out.println(movieId);
 		String recommand = StringUtil.ToString(param.getString("recommand"));
 		String tip = StringUtil.ToString(param.getString("tip"));
-		UUID uuid = UUID.randomUUID();
 		String str = uuid.toString();
         String id = str.substring(0, 8) + str.substring(9, 13) + str.substring(14, 18) + str.substring(19, 23) + str.substring(24);
 		data.put("id", id);
@@ -117,6 +119,18 @@ public class MovieServiceImpl extends CommonFunction implements MovieService {
 		String movieId = StringUtil.ToString(param.getString("id"));
 		data.put("movieId", movieId);
 		int number = this.delete("MovieRecommand.deleteById", data);
+		return number;
+	}
+
+	@Override
+	public int saveImage(Movie movie) {
+		// TODO Auto-generated method stub
+		String str = uuid.toString();
+        String id = str.substring(0, 8) + str.substring(9, 13) + str.substring(14, 18) + str.substring(19, 23) + str.substring(24);
+   
+		movie.setId(id);
+		movie.setCreateData(new Date());
+		int number = this.insert("Movie.insert", movie);
 		return number;
 	}
 

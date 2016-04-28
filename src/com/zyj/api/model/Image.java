@@ -1,9 +1,10 @@
 package com.zyj.api.model;
 
-public class MovieMessage {
-	private String id;
+public class Image {
+	
+	private String id ;
 	private String url;
-	private String name;
+	private String localPath;
 	
 	public String getId() {
 		return id;
@@ -17,11 +18,12 @@ public class MovieMessage {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	public String getName() {
-		return name;
+	public String getLocalPath() {
+		return localPath;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setLocalPath(String localPath) {
+		this.localPath = localPath;
 	}
 	
+
 }

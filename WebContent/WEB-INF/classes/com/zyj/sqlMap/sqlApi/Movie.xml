@@ -59,8 +59,10 @@
   </select>
   
   <insert id="insert" parameterType="java.util.HashMap" >
-    insert into movie_recommand (id, movieId, recommand)
-    values (#{id,jdbcType=VARCHAR}, #{movieId,jdbcType=VARCHAR}, #{recommand,jdbcType=VARCHAR}
+    insert into movie (id, imgId, name, type, tip, director, score, area, shortMessage, staror, ownerId, createData, releaseDate)
+    values (#{id,jdbcType=VARCHAR}, #{imgId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{tip,jdbcType=VARCHAR},
+    #{director,jdbcType=VARCHAR}, #{score,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{shortMessage,jdbcType=VARCHAR}, #{staror,jdbcType=VARCHAR},
+    #{ownerId,jdbcType=VARCHAR},#{createData,jdbcType=DATE},#{releaseDate,jdbcType=DATE}
       )
   </insert>
   

@@ -1,5 +1,7 @@
 package com.zyj.api.model;
 
+import java.util.Date;
+
 public class Movie {
 	private String id;
 	private String imgId;
@@ -12,8 +14,8 @@ public class Movie {
 	private String staror;
 	private int score;
 	private String ownerId;
-	private String releaseDate;
-	private String createData;
+	private Date releaseDate;
+	private Date createData;
 	
 	public String getId() {
 		return id;
@@ -77,11 +79,11 @@ public class Movie {
 	public void setOwnerId(String ownerId) {
 		this.ownerId = ownerId;
 	}
-	public String getCreateData() {
+	public Date getCreateData() {
 		return createData;
 	}
-	public void setCreateData(String createData) {
-		this.createData = createData;
+	public void setCreateData(Date date) {
+		this.createData = date;
 	}
 	public String getArea() {
 		return area;
@@ -89,10 +91,10 @@ public class Movie {
 	public void setArea(String area) {
 		this.area = area;
 	}
-	public String getReleaseDate() {
+	public Date getReleaseDate() {
 		return releaseDate;
 	}
-	public void setReleaseDate(String releaseDate) {
+	public void setReleaseDate(Date releaseDate) {
 		this.releaseDate = releaseDate;
 	}
     

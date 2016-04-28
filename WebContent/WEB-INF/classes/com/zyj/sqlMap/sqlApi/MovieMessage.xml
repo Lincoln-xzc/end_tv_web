@@ -9,6 +9,12 @@
     id, url
   </sql>
   
+  <insert id="insert" parameterType="java.util.HashMap" >
+    insert into movie_message (id, url)
+    values (#{id,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}
+      )
+  </insert>
+  
   <select id="selectByCondition" resultType="MovieMessage" parameterType="java.util.HashMap" >
     select 
     <include refid="Base_Column_Axis" />
