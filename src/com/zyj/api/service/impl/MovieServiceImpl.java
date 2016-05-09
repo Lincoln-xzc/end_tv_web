@@ -77,11 +77,21 @@ public class MovieServiceImpl extends CommonFunction implements MovieService {
 		List<Object> resultData = new ArrayList<Object>();
 		String type = StringUtil.ToString(params.getString("type"));
 		System.out.println(type);
+		String tip = StringUtil.ToString(params.getString("tip"));
+		String area = StringUtil.ToString(params.getString("area"));
+		String releaseDate = StringUtil.ToString(params.getString("releaseDate"));
 		int size = Integer.parseInt(params.getString("size"));
 		int currentPage = Integer.parseInt(params.getString("currentPage"));
-		System.out.println(currentPage);
+        
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("type", type);
+		if(!tip.equals("")){
+			data.put("tip", tip);
+		} else if(!area.equals("")){
+			data.put("area", area);
+		} else if(!releaseDate.equals("")){
+			data.put("releaseDate", releaseDate);
+		}
 		PageResultBean prb = new PageResultBean();
 		prb.setPageSize(size);
 		prb.setCurrentPage(currentPage);

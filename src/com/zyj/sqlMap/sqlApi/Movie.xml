@@ -38,12 +38,30 @@
     <if test="type != null" >
     and type = #{type}
     </if>
+    <if test="tip !=null">
+    and tip = #{tip}
+    </if>
+    <if test="area !=null">
+    and area = #{tip}
+    </if>
+    <if test = "releaseDate !=null">
+    and releaseDate = #{releaseDate}
+    </if>
   </select>
   
     <select id="selectPage" resultType="int"  parameterType="java.util.HashMap" >
     select count(*) c from movie where 1=1
     <if test="type != null" >
     and type = #{type}
+    </if>
+    <if test = "tip !=null">
+    and tip = #{tip}
+    </if>
+    <if test = "area !=null">
+    and area = #{area}
+    </if>
+    <if test = "releaseDate !=null">
+    and releaseDate = #{releaseDate}
     </if>
   </select>
   
