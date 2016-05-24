@@ -1,6 +1,8 @@
 package com.zyj.api.action;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,7 +59,14 @@ public class UserAction extends BaseAction {
 		result.put("data", reUser);
 		result.put("code", ApiResultBean.SUCCESS_CODE);
 		return result;
-		
 	}
-
+	
+	@RequestMapping(value="/findAll", method = RequestMethod.POST)
+	@ResponseBody
+	public List<Object> findAll(HttpServletRequest request, HttpServletResponse response){
+		List<Object> result = new ArrayList<Object>();
+		result = userService.find();
+		result.add(ApiResultBean.SUCCESS_CODE);
+		return result;
+	}	
 }

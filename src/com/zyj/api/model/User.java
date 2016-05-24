@@ -7,6 +7,7 @@ public class User {
 	private String name;
 	private String password;
 	private String email;
+	private int tel;
 	private Date loginTime;
 	
 	public String getId() {
@@ -32,6 +33,12 @@ public class User {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public int getTel() {
+		return tel;
+	}
+	public void setTel(int tel) {
+		this.tel = tel;
 	}
 	public Date getLoginTime() {
 		return loginTime;

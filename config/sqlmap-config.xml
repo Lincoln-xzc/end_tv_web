@@ -4,10 +4,10 @@
 <configuration>
 	
 	<mappers>  
-
         <mapper resource="com/zyj/sqlMap/sqlApi/Movie.xml"/>
         <mapper resource="com/zyj/sqlMap/sqlApi/MovieMessage.xml"/>
         <mapper resource="com/zyj/sqlMap/sqlApi/MovieRecommand.xml"/>
         <mapper resource="com/zyj/sqlMap/sqlApi/User.xml"/>
+        <mapper resource="com/zyj/sqlMap/sqlApi/Role.xml"/>
     </mappers>
 </configuration>
